@@ -16,12 +16,12 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <!-- Chosen Palette: "Modern Sapphire" - A professional and distinct palette using deep navy, slate gray, and a clean white background. -->
-    <!-- Application Structure Plan: The SPA has been elevated to a full professional portfolio. The structure now includes a dynamic hero section for impact, an 'About Me' narrative for personal connection, a vertical timeline for experience, and flip-card projects for interactive discovery. This user-centric flow guides visitors from a high-level impression to detailed exploration, making it ideal for a primary professional website. A dedicated contact section and enhanced footer complete the professional-grade experience. -->
+    <!-- Application Structure Plan: The SPA has been elevated to a full professional portfolio. The structure now includes a dynamic hero section for impact, an 'About Me' narrative for personal connection, a dedicated 'Teaching' section for academic roles, a vertical timeline for experience, and flip-card projects for interactive discovery. This user-centric flow guides visitors from a high-level impression to detailed exploration, making it ideal for a primary professional website. -->
     <!-- Visualization & Content Choices: 
         - Hero Section: Goal is to engage immediately. Method: Full-screen layout with a JS-powered typewriter effect. Justification: Creates a dynamic and modern first impression.
-        - Experience Timeline: Goal is to clearly show career progression. Method: Vertical timeline with HTML/CSS. Justification: More visually engaging and easier to follow than a simple list.
+        - Teaching Section: Goal is to highlight academic mentorship. Method: Cards for roles and a dedicated philosophy statement. Justification: Provides clear, scannable evidence of teaching capabilities for academic audiences.
+        - Experience Timeline: Goal is to clearly show career progression. Method: Vertical timeline with HTML/CSS, now enhanced with detailed descriptions. Justification: Provides meaningful context and impact beyond concise bullet points.
         - Project Cards: Goal is to encourage interaction and detail discovery. Method: 3D flip cards using CSS transforms. Interaction: On hover, cards flip to show details. Justification: A "wow" factor that makes exploring projects more engaging.
-        - Custom Cursor: Goal is to add a polished, custom feel. Method: JS to track mouse movement and position custom divs. Justification: A subtle detail that elevates the entire user experience.
         - CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
     <style>
         body {
@@ -80,10 +80,10 @@
         .section-fade-in.visible .fade-in-child:nth-child(1) { transition-delay: 0.1s; }
         .section-fade-in.visible .fade-in-child:nth-child(2) { transition-delay: 0.2s; }
         .section-fade-in.visible .fade-in-child:nth-child(3) { transition-delay: 0.3s; }
-        .gradient-text { background: linear-gradient(45deg, #1A3A8A, #3B82F6); background-clip: text; -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .gradient-text { background: linear-gradient(45deg, #1A3A8A, #3B82F6); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
         .typewriter-cursor { display: inline-block; width: 3px; background-color: #495057; animation: blink 0.7s infinite; }
         @keyframes blink { 50% { opacity: 0; } }
-        .timeline-item::before { content: ''; position: absolute; left: -29px; top: 0; width: 18px; height: 18px; border-radius: 50%; background-color: #fff; border: 4px solid #1A3A8A; }
+        .timeline-item::before { content: ''; position: absolute; left: -31px; top: 4px; width: 22px; height: 22px; border-radius: 50%; background-color: #fff; border: 5px solid #1A3A8A; z-index: 10; }
         .flip-card { perspective: 1000px; }
         .flip-card-inner { position: relative; width: 100%; height: 100%; transition: transform 0.6s; transform-style: preserve-3d; }
         .flip-card:hover .flip-card-inner { transform: rotateY(180deg); }
@@ -104,6 +104,7 @@
                 <div class="hidden md:block">
                     <div class="ml-10 flex items-baseline space-x-8">
                         <a href="#about" class="nav-link text-sm font-medium text-gray-700">About</a>
+                        <a href="#teaching" class="nav-link text-sm font-medium text-gray-700">Teaching</a>
                         <a href="#experience" class="nav-link text-sm font-medium text-gray-700">Experience</a>
                         <a href="#projects" class="nav-link text-sm font-medium text-gray-700">Projects</a>
                         <a href="#skills" class="nav-link text-sm font-medium text-gray-700">Skills</a>
@@ -121,6 +122,7 @@
         <div id="mobile-menu" class="md:hidden hidden">
             <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3">
                 <a href="#about" class="block nav-link px-3 py-2 rounded-md text-base font-medium text-gray-700">About</a>
+                <a href="#teaching" class="block nav-link px-3 py-2 rounded-md text-base font-medium text-gray-700">Teaching</a>
                 <a href="#experience" class="block nav-link px-3 py-2 rounded-md text-base font-medium text-gray-700">Experience</a>
                 <a href="#projects" class="block nav-link px-3 py-2 rounded-md text-base font-medium text-gray-700">Projects</a>
                 <a href="#skills" class="block nav-link px-3 py-2 rounded-md text-base font-medium text-gray-700">Skills</a>
@@ -168,29 +170,73 @@
             </div>
         </section>
 
+        <section id="teaching" class="py-24 bg-white -mx-4 sm:-mx-6 lg:-mx-8 px-4 sm:px-6 lg:px-8 section-fade-in">
+            <div class="max-w-7xl mx-auto">
+                <div class="text-center mb-16">
+                    <h2 class="text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl"><span class="gradient-text">Teaching & Mentoring</span></h2>
+                </div>
+                <div class="max-w-3xl mx-auto text-center mb-12 fade-in-child">
+                    <h3 class="text-2xl font-semibold text-gray-800">My Teaching Philosophy</h3>
+                    <p class="mt-4 text-lg text-gray-700">
+                        I believe in demystifying complex topics by connecting them to fundamental principles and real-world applications. My goal is to foster a supportive learning environment where students feel empowered to ask questions, experiment, and build a strong, intuitive understanding of computer science.
+                    </p>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    <div class="content-card p-8 rounded-xl fade-in-child">
+                        <h3 class="text-xl font-bold text-gray-800">Teaching Assistant</h3>
+                        <p class="text-md font-medium text-blue-600">Vellore Institute of Technology</p>
+                        <p class="text-sm text-gray-500 mt-1">Aug 2019 - Nov 2021</p>
+                        <ul class="mt-4 list-disc list-inside space-y-2 text-gray-700">
+                            <li>Led weekly problem-solving sessions for Data Structures & Algorithms.</li>
+                            <li>Clarified complex topics, debugged code, and provided guidance on assignments.</li>
+                            <li>Selected as a Speaker for the Data Structures Workshop in 2019.</li>
+                        </ul>
+                    </div>
+                    <div class="content-card p-8 rounded-xl fade-in-child">
+                        <h3 class="text-xl font-bold text-gray-800">Mentor</h3>
+                        <p class="text-md font-medium text-blue-600">Goldman Sachs</p>
+                        <p class="text-sm text-gray-500 mt-1">Aug 2022 - Jul 2025</p>
+                        <ul class="mt-4 list-disc list-inside space-y-2 text-gray-700">
+                            <li>Formally mentored junior engineers on software design and best practices.</li>
+                            <li>Provided guidance on navigating complex system architecture.</li>
+                            <li>Facilitated onboarding and technical growth for new team members.</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+
         <section id="experience" class="py-24 section-fade-in">
              <div class="text-center mb-16">
                 <h2 class="text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl"><span class="gradient-text">Work Experience</span></h2>
             </div>
-            <div class="relative pl-8 border-l-2 border-gray-200">
-                <div class="timeline-item mb-12 fade-in-child">
-                    <h3 class="text-xl font-bold text-gray-800">Software Engineer II</h3>
-                    <p class="text-md font-medium text-blue-600">Goldman Sachs</p>
-                    <p class="text-sm text-gray-500 mt-1">Aug 2022 - Jul 2025</p>
-                    <ul class="mt-4 list-disc list-inside space-y-2 text-gray-700">
-                        <li>Architected a multi-tenant, cloud-native reporting platform on AWS, reducing manual effort by 70%.</li>
-                        <li>Led a full-stack modernization project, improving developer velocity by 60%.</li>
-                        <li>Engineered central data models in a Snowflake data lake serving 10M+ records monthly.</li>
+            <div class="relative pl-10 border-l-4 border-gray-200">
+                <div class="timeline-item mb-16 fade-in-child">
+                    <div class="mb-4">
+                        <h3 class="text-2xl font-bold text-gray-800">Software Engineer II</h3>
+                        <p class="text-lg font-medium text-blue-600">Goldman Sachs</p>
+                        <p class="text-sm text-gray-500 mt-1">Aug 2022 - Jul 2025</p>
+                    </div>
+                    <p class="text-gray-700 mb-4">As a key contributor in the Asset & Wealth Management division, I delivered high-impact solutions for client data management and reporting. My role involved full-stack development, cloud architecture, and data engineering to modernize critical platforms and automate complex business processes.</p>
+                    <h4 class="font-semibold text-gray-800 mb-2">Key Achievements:</h4>
+                    <ul class="list-disc list-inside space-y-2 text-gray-700">
+                        <li><b>Cloud Platform Architecture:</b> Led the design and delivery of a multi-tenant, cloud-native reporting platform on AWS, utilizing services like ECS, Lambda, and Step Functions. This initiative automated over 100 report templates, reducing manual effort by 70% and mitigating regulatory risk by 80%.</li>
+                        <li><b>Full-Stack Modernization:</b> Spearheaded the migration of a key client service application from a legacy Java backend to a modern Spring Boot microservices architecture, with a new frontend built in React and Next.js. This improved developer velocity by 60% and slashed deployment times from hours to minutes.</li>
+                        <li><b>Data Engineering & Scalability:</b> Engineered a centralized data model within a Snowflake data lake, unifying over 15 disparate data feeds. This system served over 10 million records monthly to downstream applications with 99.9% uptime, ensuring data consistency and reliability across the firm.</li>
                     </ul>
                 </div>
                 <div class="timeline-item fade-in-child">
-                    <h3 class="text-xl font-bold text-gray-800">Software Engineer Intern</h3>
-                    <p class="text-md font-medium text-blue-600">Walmart Global Tech India</p>
-                    <p class="text-sm text-gray-500 mt-1">Jan 2022 - Jul 2022</p>
-                    <ul class="mt-4 list-disc list-inside space-y-2 text-gray-700">
-                        <li>Developed critical UI components affecting 500K+ daily transactions.</li>
-                        <li>Designed integration tests with 90% coverage, preventing 8 potential production failures.</li>
-                        <li>Received an Excellence Award and a Full-Time Position Offer.</li>
+                    <div class="mb-4">
+                        <h3 class="text-2xl font-bold text-gray-800">Software Engineer Intern</h3>
+                        <p class="text-lg font-medium text-blue-600">Walmart Global Tech India</p>
+                        <p class="text-sm text-gray-500 mt-1">Jan 2022 - Jul 2022</p>
+                    </div>
+                    <p class="text-gray-700 mb-4">During my internship in the Core Supply Chain team, I took ownership of developing critical frontend components for a high-volume logistics platform. My work focused on creating robust, user-friendly interfaces and ensuring system stability through rigorous testing.</p>
+                    <h4 class="font-semibold text-gray-800 mb-2">Key Achievements:</h4>
+                    <ul class="list-disc list-inside space-y-2 text-gray-700">
+                        <li><b>High-Impact Feature Development:</b> Served as the sole developer for a critical UI module using ReactJS, which was successfully rolled out across three regions and impacted over 500,000 daily transactions.</li>
+                        <li><b>Ensuring System Reliability:</b> Designed and implemented a comprehensive suite of integration tests with 90% code coverage. This proactive approach prevented 8 potential production failures and ensured zero critical incidents for all launched features.</li>
+                        <li><b>Recognition of Excellence:</b> Received an official Excellence Award for outstanding contributions and technical ownership, which directly led to the offer of a full-time position.</li>
                     </ul>
                 </div>
             </div>
