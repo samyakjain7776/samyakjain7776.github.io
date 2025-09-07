@@ -350,11 +350,14 @@
                         entry.target.classList.add('visible');
                         const activeId = entry.target.id;
                         navLinks.forEach(link => {
-                            link.classList.toggle('active-link', link.getAttribute('href').substring(1) === activeId);
+                           link.classList.remove('active-link');
+                           if(link.getAttribute('href').substring(1) === activeId) {
+                               link.classList.add('active-link');
+                           }
                         });
                     }
                 });
-            }, { rootMargin: "-30% 0px -70% 0px" });
+            }, { threshold: 0.15 }); 
             sections.forEach(section => observer.observe(section));
             
             // Smooth Scroll
