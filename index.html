@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Samyak Jain - Software Engineer & Researcher</title>
+    <title>Samyak Jain - MS CS Student & Software Engineer</title>
     
     <meta name="description" content="The personal portfolio of Samyak Jain, a Master's student at Georgia Tech and Software Engineer with experience at Goldman Sachs.">
     <meta property="og:title" content="Samyak Jain - Portfolio">
@@ -16,13 +16,14 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <!-- Chosen Palette: "Modern Sapphire" - A professional and distinct palette using deep navy, slate gray, and a clean white background. -->
-    <!-- Application Structure Plan: The SPA has been elevated to a full professional portfolio. The structure now includes a dynamic hero section for impact, an 'About Me' narrative for personal connection, a dedicated 'Teaching' section for academic roles, a vertical timeline for experience, and flip-card projects for interactive discovery. This user-centric flow guides visitors from a high-level impression to detailed exploration, making it ideal for a primary professional website. -->
+    <!-- Application Structure Plan: The SPA has been elevated to a full professional portfolio. The structure now includes a dynamic hero section for impact, an 'About Me' narrative for personal connection, a dedicated 'Teaching' section for academic roles, a vertical timeline for experience, and flip-card projects for interactive discovery. A new 'Leadership & Achievements' section has been added to showcase extracurriculars and awards. This user-centric flow guides visitors from a high-level impression to detailed exploration, making it ideal for a primary professional website. -->
     <!-- Visualization & Content Choices: 
         - Hero Section: Goal is to engage immediately. Method: Full-screen layout with a JS-powered typewriter effect. Justification: Creates a dynamic and modern first impression.
         - About Me Section: Goal is to create a personal narrative. Method: Rewritten, story-driven copy. Justification: Connects with the reader on a professional and personal level, moving beyond a simple list of facts.
         - Teaching Section: Goal is to highlight academic mentorship. Method: Cards for roles and a dedicated philosophy statement. Justification: Provides clear, scannable evidence of teaching capabilities for academic audiences.
         - Experience Timeline: Goal is to clearly show career progression. Method: Vertical timeline with HTML/CSS, now enhanced with detailed descriptions. Justification: Provides meaningful context and impact beyond concise bullet points.
-        - Project Cards: Goal is to encourage interaction and detail discovery. Method: 3D flip cards using CSS transforms. Interaction: On hover, cards flip to show details. Justification: A "wow" factor that makes exploring projects more engaging.
+        - Achievements Section: Goal is to showcase awards and leadership. Method: A two-column card layout. Justification: Separates quantifiable achievements from leadership roles for clarity and impact.
+        - Project Cards: Goal is to encourage interaction and detail discovery. Method: 3D flip cards using CSS transforms, now in a 2x2 grid. Interaction: On hover, cards flip to show details. Justification: A "wow" factor that makes exploring projects more engaging and accommodates more content.
         - CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
     <style>
         body {
@@ -81,6 +82,7 @@
         .section-fade-in.visible .fade-in-child:nth-child(1) { transition-delay: 0.1s; }
         .section-fade-in.visible .fade-in-child:nth-child(2) { transition-delay: 0.2s; }
         .section-fade-in.visible .fade-in-child:nth-child(3) { transition-delay: 0.3s; }
+        .section-fade-in.visible .fade-in-child:nth-child(4) { transition-delay: 0.4s; }
         .gradient-text { background: linear-gradient(45deg, #1A3A8A, #3B82F6); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
         .typewriter-cursor { display: inline-block; width: 3px; background-color: #495057; animation: blink 0.7s infinite; }
         @keyframes blink { 50% { opacity: 0; } }
@@ -88,8 +90,10 @@
         .flip-card { perspective: 1000px; }
         .flip-card-inner { position: relative; width: 100%; height: 100%; transition: transform 0.6s; transform-style: preserve-3d; }
         .flip-card:hover .flip-card-inner { transform: rotateY(180deg); }
-        .flip-card-front, .flip-card-back { position: absolute; width: 100%; height: 100%; -webkit-backface-visibility: hidden; backface-visibility: hidden; }
+        .flip-card-front, .flip-card-back { position: absolute; width: 100%; height: 100%; -webkit-backface-visibility: hidden; backface-visibility: hidden; display: flex; flex-direction: column; justify-content: center; text-align: center; padding: 1.5rem; }
         .flip-card-back { transform: rotateY(180deg); }
+        .achievement-item { display: flex; align-items: flex-start; gap: 0.75rem; }
+        .achievement-icon { color: #1A3A8A; flex-shrink: 0; }
     </style>
 </head>
 <body class="antialiased">
@@ -109,6 +113,7 @@
                         <a href="#experience" class="nav-link text-sm font-medium text-gray-700">Experience</a>
                         <a href="#projects" class="nav-link text-sm font-medium text-gray-700">Projects</a>
                         <a href="#skills" class="nav-link text-sm font-medium text-gray-700">Skills</a>
+                        <a href="#achievements" class="nav-link text-sm font-medium text-gray-700">Achievements</a>
                         <a href="#contact" class="nav-link text-sm font-medium text-gray-700">Contact</a>
                     </div>
                 </div>
@@ -127,6 +132,7 @@
                 <a href="#experience" class="block nav-link px-3 py-2 rounded-md text-base font-medium text-gray-700">Experience</a>
                 <a href="#projects" class="block nav-link px-3 py-2 rounded-md text-base font-medium text-gray-700">Projects</a>
                 <a href="#skills" class="block nav-link px-3 py-2 rounded-md text-base font-medium text-gray-700">Skills</a>
+                <a href="#achievements" class="block nav-link px-3 py-2 rounded-md text-base font-medium text-gray-700">Achievements</a>
                 <a href="#contact" class="block nav-link px-3 py-2 rounded-md text-base font-medium text-gray-700">Contact</a>
             </div>
         </div>
@@ -247,37 +253,70 @@
             <div class="text-center mb-16">
                 <h2 class="text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl"><span class="gradient-text">Key Projects</span></h2>
             </div>
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-8">
                 <div class="flip-card h-80 rounded-xl fade-in-child">
                     <div class="flip-card-inner content-card">
-                        <div class="flip-card-front p-8 flex flex-col justify-center items-center text-center">
-                            <h3 class="text-2xl font-bold text-gray-800">High-Throughput Rendering Service</h3>
-                            <p class="mt-2 text-gray-600">A stateless microservice for massive report generation.</p>
-                            <p class="mt-4 font-semibold text-blue-600">Hover to learn more</p>
-                        </div>
-                        <div class="flip-card-back p-8 flex flex-col justify-center">
-                            <p class="text-gray-700">Architected a service to stream and render JSON payloads up to 5GB into Excel/CSV, completely avoiding memory errors and reducing resource usage by 65%.</p>
-                            <div class="mt-4 flex flex-wrap gap-2">
-                                <span class="bg-gray-200 text-gray-800 text-xs font-semibold mr-2 px-2.5 py-0.5 rounded-full">Java</span>
-                                <span class="bg-gray-200 text-gray-800 text-xs font-semibold mr-2 px-2.5 py-0.5 rounded-full">Spring Boot</span>
-                                <span class="bg-gray-200 text-gray-800 text-xs font-semibold mr-2 px-2.5 py-0.5 rounded-full">Apache POI</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="flip-card h-80 rounded-xl fade-in-child">
-                    <div class="flip-card-inner content-card">
-                        <div class="flip-card-front p-8 flex flex-col justify-center items-center text-center">
+                        <div class="flip-card-front">
                             <h3 class="text-2xl font-bold text-gray-800">Hand Gesture Recognition</h3>
                             <p class="mt-2 text-gray-600">Real-time ASL translation using computer vision.</p>
                              <p class="mt-4 font-semibold text-blue-600">Hover to learn more</p>
                         </div>
-                        <div class="flip-card-back p-8 flex flex-col justify-center">
-                            <p class="text-gray-700">Engineered a system using CNNs that achieved 95% accuracy in translating American Sign Language gestures, with applications in accessibility and human-computer interaction.</p>
-                             <div class="mt-4 flex flex-wrap gap-2">
-                                <span class="bg-gray-200 text-gray-800 text-xs font-semibold mr-2 px-2.5 py-0.5 rounded-full">Python</span>
-                                <span class="bg-gray-200 text-gray-800 text-xs font-semibold mr-2 px-2.5 py-0.5 rounded-full">CNN</span>
-                                <span class="bg-gray-200 text-gray-800 text-xs font-semibold mr-2 px-2.5 py-0.5 rounded-full">OpenCV</span>
+                        <div class="flip-card-back">
+                            <p class="text-gray-700">Engineered a system using CNNs that achieved 95% accuracy in translating ASL gestures, with applications in accessibility and human-computer interaction.</p>
+                             <div class="mt-4 flex flex-wrap gap-2 justify-center">
+                                <span class="bg-gray-200 text-gray-800 text-xs font-semibold px-2.5 py-0.5 rounded-full">Python</span>
+                                <span class="bg-gray-200 text-gray-800 text-xs font-semibold px-2.5 py-0.5 rounded-full">CNN</span>
+                                <span class="bg-gray-200 text-gray-800 text-xs font-semibold px-2.5 py-0.5 rounded-full">OpenCV</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="flip-card h-80 rounded-xl fade-in-child" style="transition-delay: 0.2s;">
+                    <div class="flip-card-inner content-card">
+                        <div class="flip-card-front">
+                            <h3 class="text-2xl font-bold text-gray-800">Twitter Sentiment Analysis</h3>
+                            <p class="mt-2 text-gray-600">Real-time sentiment prediction for any hashtag.</p>
+                            <p class="mt-4 font-semibold text-blue-600">Hover to learn more</p>
+                        </div>
+                        <div class="flip-card-back">
+                            <p class="text-gray-700">Developed an end-to-end system that scrapes a customizable number of tweets for a given hashtag using the Tweepy API, then predicts sentiment (Positive, Negative, Neutral) using a trained CNN model, and displays the results graphically.</p>
+                            <div class="mt-4 flex flex-wrap gap-2 justify-center">
+                                <span class="bg-gray-200 text-gray-800 text-xs font-semibold px-2.5 py-0.5 rounded-full">Python</span>
+                                <span class="bg-gray-200 text-gray-800 text-xs font-semibold px-2.5 py-0.5 rounded-full">Tweepy</span>
+                                <span class="bg-gray-200 text-gray-800 text-xs font-semibold px-2.5 py-0.5 rounded-full">CNN</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                 <div class="flip-card h-80 rounded-xl fade-in-child" style="transition-delay: 0.3s;">
+                    <div class="flip-card-inner content-card">
+                        <div class="flip-card-front">
+                            <h3 class="text-2xl font-bold text-gray-800">Homomorphic Image Encryption</h3>
+                            <p class="mt-2 text-gray-600">Privacy-preserving image processing.</p>
+                            <p class="mt-4 font-semibold text-blue-600">Hover to learn more</p>
+                        </div>
+                        <div class="flip-card-back">
+                            <p class="text-gray-700">Implemented and compared two homomorphic encryption algorithms for secure image processing, demonstrating techniques on encrypted data for cybersecurity applications.</p>
+                             <div class="mt-4 flex flex-wrap gap-2 justify-center">
+                                <span class="bg-gray-200 text-gray-800 text-xs font-semibold px-2.5 py-0.5 rounded-full">Python</span>
+                                <span class="bg-gray-200 text-gray-800 text-xs font-semibold px-2.5 py-0.5 rounded-full">Cryptography</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="flip-card h-80 rounded-xl fade-in-child" style="transition-delay: 0.4s;">
+                    <div class="flip-card-inner content-card">
+                        <div class="flip-card-front">
+                            <h3 class="text-2xl font-bold text-gray-800">Network Intrusion Detection</h3>
+                            <p class="mt-2 text-gray-600">A multi-level ML-based IDS.</p>
+                            <p class="mt-4 font-semibold text-blue-600">Hover to learn more</p>
+                        </div>
+                        <div class="flip-card-back">
+                            <p class="text-gray-700">Designed a system using ensemble ML algorithms and a deep learning ANN to optimally detect network intrusions, overcoming challenges faced by existing IDS solutions.</p>
+                             <div class="mt-4 flex flex-wrap gap-2 justify-center">
+                                <span class="bg-gray-200 text-gray-800 text-xs font-semibold px-2.5 py-0.5 rounded-full">Python</span>
+                                <span class="bg-gray-200 text-gray-800 text-xs font-semibold px-2.5 py-0.5 rounded-full">TensorFlow</span>
+                                <span class="bg-gray-200 text-gray-800 text-xs font-semibold px-2.5 py-0.5 rounded-full">Scikit-learn</span>
                             </div>
                         </div>
                     </div>
@@ -301,6 +340,66 @@
             </div>
         </section>
         
+        <section id="achievements" class="py-24 bg-white -mx-4 sm:-mx-6 lg:-mx-8 px-4 sm:px-6 lg:px-8 section-fade-in">
+            <div class="max-w-7xl mx-auto">
+                <div class="text-center mb-16">
+                    <h2 class="text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl"><span class="gradient-text">Leadership & Achievements</span></h2>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    <div class="content-card p-8 rounded-xl fade-in-child">
+                        <h3 class="text-2xl font-bold text-gray-800 mb-6">Key Achievements</h3>
+                        <div class="space-y-4">
+                            <div class="achievement-item">
+                                <span class="achievement-icon mt-1">🏆</span>
+                                <div><span class="font-semibold">University Rank:</span> Ranked 9th out of 2000+ students in CS at VIT.</div>
+                            </div>
+                            <div class="achievement-item">
+                                <span class="achievement-icon mt-1">⭐</span>
+                                <div><span class="font-semibold">Excellence Award:</span> Recognized for outstanding contributions during Walmart internship.</div>
+                            </div>
+                            <div class="achievement-item">
+                                <span class="achievement-icon mt-1">📈</span>
+                                <div><span class="font-semibold">Promotion:</span> Promoted to Technology Associate at Goldman Sachs for high performance.</div>
+                            </div>
+                             <div class="achievement-item">
+                                <span class="achievement-icon mt-1">🥇</span>
+                                <div><span class="font-semibold">Gold Medal:</span> Secured Gold in the National Skill Qualifications Framework assessment for Security Analyst.</div>
+                            </div>
+                            <div class="achievement-item">
+                                <span class="achievement-icon mt-1">🎤</span>
+                                <div><span class="font-semibold">Speaker:</span> Selected speaker at the Data Structures Workshop at VIT, 2019.</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="content-card p-8 rounded-xl fade-in-child">
+                         <h3 class="text-2xl font-bold text-gray-800 mb-6">Leadership & Volunteering</h3>
+                         <div class="space-y-6">
+                            <div>
+                                <h4 class="text-lg font-semibold text-gray-800">Technical Lead, Computer Society of India</h4>
+                                <ul class="mt-2 list-disc list-inside space-y-1 text-gray-700">
+                                    <li>Conducted multiple hackathons and coding competitions.</li>
+                                    <li>Mentored junior students on algorithms and data structures.</li>
+                                </ul>
+                            </div>
+                            <div>
+                                <h4 class="text-lg font-semibold text-gray-800">Goldman Sachs Community Team Work</h4>
+                                <ul class="mt-2 list-disc list-inside space-y-1 text-gray-700">
+                                    <li>Taught basic robotics to government school students.</li>
+                                    <li>Developed learning aids for children with hearing disabilities.</li>
+                                </ul>
+                            </div>
+                            <div>
+                                <h4 class="text-lg font-semibold text-gray-800">Red Cross Society, VIT</h4>
+                                <ul class="mt-2 list-disc list-inside space-y-1 text-gray-700">
+                                    <li>Organized campus-wide blood donation camps facilitating 300+ annual donations.</li>
+                                </ul>
+                            </div>
+                         </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
         <section id="contact" class="py-24 text-center section-fade-in">
             <div class="fade-in-child">
                 <h2 class="text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl"><span class="gradient-text">Get In Touch</span></h2>
