@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Portfolio | Samyak Jain</title>
+    <meta name="description" content="Projects and engineering write-ups by Samyak Jain: retrieval, report rendering, vector search, and earlier machine learning work.">
+    <meta property="og:title" content="Portfolio | Samyak Jain">
+    <meta property="og:description" content="Projects and engineering write-ups by Samyak Jain: retrieval, report rendering, vector search, and earlier machine learning work.">
+    <meta property="og:type" content="website">
+    <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+    <link rel="stylesheet" href="assets/site.css">
+    <script defer src="assets/site.js"></script>
+</head>
+<body>
+<a class="skip-link" href="#main">Skip to content</a>
+<header class="site-header">
+    <nav class="container navigation" aria-label="Main navigation">
+        <a class="name" href="index.html">Samyak Jain<span>.</span></a>
+        <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="navigation-links">Menu</button>
+        <div class="nav-links" id="navigation-links"><a href="index.html">Home</a><a href="index.html#research">Research</a><a href="portfolio.html" aria-current="page">Portfolio</a><a class="resume-link" href="assets/SamyakJain_Resume.pdf">Resume ↗</a></div>
+    </nav>
+</header>
+<main class="container" id="main">
+    <div class="page-intro"><p class="eyebrow">Projects &amp; experiments</p><h1>Project portfolio.</h1><p class="standfirst">Things I’ve built, the decisions behind them, and what the results actually showed.</p></div>
+    <section class="collection" aria-label="Project collection"><div class="project-grid">
+<a class="project-card" href="projects/multi-tenant-rag.html" aria-label="Multi-tenant RAG &amp; shared inference — explore the experiments">
+    <span class="eyebrow">Research · Georgia Tech</span>
+    <h3>Multi-tenant RAG &amp; shared inference</h3>
+    <p>Separate document indexes, a shared serving design, and experiments comparing flat and agentic retrieval.</p>
+    <p class="result">31 / 60 correct on PostgreSQL QA, up from 14 / 60. No improvement on paired MuSiQue.</p>
+    <div class="card-footer"><span>Explore the experiments</span><span aria-hidden="true">↗</span></div>
+</a>
+<a class="project-card" href="projects/simple-renderer.html" aria-label="Simple Renderer — read the project">
+    <span class="eyebrow">Engineering · Goldman Sachs</span>
+    <h3>Simple Renderer</h3>
+    <p>Built a streaming report renderer under regulatory deadlines, then grew it into a shared AWS service used by eight teams.</p>
+    <p class="result">60% faster generation · 5GB+ inputs · ~20K reports annually.</p>
+    <div class="card-footer"><span>Read the project</span><span aria-hidden="true">↗</span></div>
+</a>
+<a class="project-card" href="projects/vector-search.html" aria-label="Adaptive Vector Search Engine — read the project">
+    <span class="eyebrow">Project · Databases</span>
+    <h3>Adaptive Vector Search Engine</h3>
+    <p>A PostgreSQL search engine that adapts its retrieval strategy to each query’s filters, balancing speed and result quality.</p>
+    <p class="result">22% lower average latency with 98.5% Recall@k across 515K hotel reviews.</p>
+    <div class="card-footer"><span>Read the project</span><span aria-hidden="true">↗</span></div>
+</a></div>
+    <h2>Earlier work</h2><div class="project-grid older-grid"><a class="project-card" href="projects/hand-gesture-recognition.html" aria-label="Hand gesture recognition — project overview">
+    <span class="eyebrow">Earlier work · Computer vision</span>
+    <h3>Hand gesture recognition</h3>
+    <p>A convolutional neural network for recognizing ASL gestures from visual input.</p>
+    <p class="result">Python · CNN · OpenCV</p>
+    <div class="card-footer"><span>Project overview</span><span aria-hidden="true">↗</span></div>
+</a>
+<a class="project-card" href="projects/network-intrusion-detection.html" aria-label="Network intrusion detection — project overview">
+    <span class="eyebrow">Earlier work · Machine learning</span>
+    <h3>Network intrusion detection</h3>
+    <p>A multi-level detection system combining ensemble learning and a neural network to identify anomalous network traffic.</p>
+    <p class="result">Python · TensorFlow · Scikit-learn</p>
+    <div class="card-footer"><span>Project overview</span><span aria-hidden="true">↗</span></div>
+</a></div>
+    <p class="collection-note">I’ll add new projects and expand these write-ups as the work develops.</p>
+    </section>
+</main>
+<footer class="site-footer"><div class="container footer-inner">
+    <span>© 2026 Samyak Jain · Atlanta, GA</span>
+    <div class="footer-links"><a href="mailto:samyak.jain7776@gmail.com">Email</a><a href="https://github.com/samyakjain7776">GitHub</a><a href="https://www.linkedin.com/in/samyakjain7776/">LinkedIn</a><a href="assets/SamyakJain_Resume.pdf">Resume</a></div>
+</div></footer>
+</body>
+</html>

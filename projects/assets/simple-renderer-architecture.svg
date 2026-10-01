@@ -1,0 +1,38 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1120 860" role="img" aria-labelledby="title desc">
+<title id="title">Simple Renderer system architecture</title>
+<desc id="desc">Upstream reporting applications submit metadata and JSON values to a standalone Java and Spring Boot service on AWS. Jackson reads the stream into sequenced chunks. Worker threads transform the data, and a reassembly buffer restores input order before a single writer produces Excel or CSV. Metadata supplies reusable column styles. Excel rows spill to temporary XML before final XLSX packaging.</desc>
+<defs><marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#5275a3"/></marker><marker id="muted-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#7c8d9e"/></marker>
+<style>text{font-family:Arial,Helvetica,sans-serif;fill:#23354c}.label{font-size:17px;font-weight:700}.small{font-size:14px;fill:#52677f}.micro{font-size:12px;fill:#61758d;letter-spacing:1px}.node{fill:white;stroke:#c6d4e6;stroke-width:1.5}.edge{fill:none;stroke:#5275a3;stroke-width:2;marker-end:url(#arrow)}.meta{fill:none;stroke:#7c8d9e;stroke-width:1.7;stroke-dasharray:6 5;marker-end:url(#muted-arrow)}</style></defs>
+<rect width="1120" height="860" rx="12" fill="#fbfcfe"/>
+<rect class="node" x="60" y="30" width="300" height="74" rx="8"/><text class="label" x="210" y="61" text-anchor="middle">Upstream applications</text><text class="small" x="210" y="85" text-anchor="middle">Business reporting workflows</text>
+<rect class="node" x="410" y="30" width="300" height="74" rx="8"/><text class="label" x="560" y="61" text-anchor="middle">Report metadata</text><text class="small" x="560" y="85" text-anchor="middle">Columns · types · display formats</text>
+<rect class="node" x="760" y="30" width="300" height="74" rx="8"/><text class="label" x="910" y="61" text-anchor="middle">Report values</text><text class="small" x="910" y="85" text-anchor="middle">Large JSON payloads</text>
+<path d="M210 104V137H910V104M560 104V137" fill="none" stroke="#5275a3" stroke-width="2"/>
+<path class="edge" d="M560 137V158H175V280"/>
+<rect x="30" y="188" width="1060" height="482" rx="12" fill="#f0f5fb" stroke="#a9bedb" stroke-width="1.5"/>
+<text class="micro" x="300" y="219">SIMPLE RENDERER SERVICE</text><text class="small" x="1060" y="219" text-anchor="end">AWS · Java / Spring Boot</text>
+<!-- Restore the incoming connector over the service boundary. -->
+<path class="edge" d="M175 188V280"/>
+<text class="small" x="194" y="257">Metadata first, then values</text>
+<rect class="node" x="70" y="280" width="210" height="105" rx="8"/><text class="label" x="175" y="316" text-anchor="middle">Streaming reader</text><text class="small" x="175" y="343" text-anchor="middle">Jackson JsonParser</text><text class="small" x="175" y="365" text-anchor="middle">Incremental input</text>
+<path class="edge" d="M280 332H320"/>
+<rect class="node" x="320" y="280" width="180" height="105" rx="8"/><text class="label" x="410" y="316" text-anchor="middle">Sequenced chunks</text><text class="small" x="410" y="343" text-anchor="middle">Input queue</text><text class="small" x="410" y="365" text-anchor="middle">1 → 2 → 3 → …</text>
+<path class="edge" d="M500 332H545"/>
+<rect x="545" y="260" width="190" height="150" rx="8" fill="#e3edfb" stroke="#9fb9df" stroke-width="1.5"/><text class="label" x="640" y="290" text-anchor="middle">Worker pool</text><text class="small" x="640" y="313" text-anchor="middle">ExecutorService</text>
+<rect x="563" y="330" width="154" height="24" rx="4" fill="white" stroke="#b4c8e3"/><text class="small" x="640" y="347" text-anchor="middle">Type conversion</text><rect x="563" y="365" width="154" height="24" rx="4" fill="white" stroke="#b4c8e3"/><text class="small" x="640" y="382" text-anchor="middle">Format mapping</text>
+<path class="edge" d="M735 332H780"/>
+<rect class="node" x="780" y="280" width="250" height="105" rx="8"/><text class="label" x="905" y="316" text-anchor="middle">Ordered reassembly</text><text class="small" x="905" y="343" text-anchor="middle">Sequence-aware buffer</text><text class="small" x="905" y="365" text-anchor="middle">Restore original row order</text>
+<path class="meta" d="M175 385V480"/><text class="small" x="193" y="440">Column definitions</text>
+<rect class="node" x="70" y="480" width="210" height="110" rx="8"/><text class="label" x="175" y="518" text-anchor="middle">Reusable styles</text><text class="small" x="175" y="545" text-anchor="middle">Types &amp; number formats</text><text class="small" x="175" y="568" text-anchor="middle">Created from metadata</text>
+<path class="meta" d="M280 538H480"/><text class="small" x="380" y="524" text-anchor="middle">Style lookup</text>
+<path class="edge" d="M905 385V445H605V495"/><text class="small" x="732" y="431" text-anchor="middle">Next chunk in sequence</text>
+<rect x="480" y="495" width="250" height="115" rx="8" fill="#e3edfb" stroke="#9fb9df" stroke-width="1.5"/><text class="label" x="605" y="533" text-anchor="middle">Single writer</text><text class="small" x="605" y="559" text-anchor="middle">SXSSF / CSV output</text><text class="small" x="605" y="584" text-anchor="middle">Preserve row order</text>
+<rect class="node" x="820" y="495" width="230" height="115" rx="8"/><text class="label" x="935" y="533" text-anchor="middle">Temporary XML</text><text class="small" x="935" y="559" text-anchor="middle">Spilled worksheet rows</text><text class="small" x="935" y="584" text-anchor="middle">Excel path only</text>
+<path class="edge" d="M730 530H820"/><text class="small" x="775" y="515" text-anchor="middle">Flush</text>
+<path class="edge" d="M820 589H730"/><text class="small" x="775" y="578" text-anchor="middle">Package</text>
+<path d="M605 610V706H445V740M605 706H805V740" fill="none" stroke="#5275a3" stroke-width="2"/>
+<path class="edge" d="M445 717V740"/><path class="edge" d="M805 717V740"/>
+<text class="small" x="628" y="696">Completed report</text>
+<rect x="315" y="740" width="260" height="80" rx="8" fill="#edf5f0" stroke="#a6c6b3" stroke-width="1.5"/><text class="label" x="445" y="775" text-anchor="middle">Excel report</text><text class="small" x="445" y="800" text-anchor="middle">Typed and formatted .xlsx</text>
+<rect x="675" y="740" width="260" height="80" rx="8" fill="#edf5f0" stroke="#a6c6b3" stroke-width="1.5"/><text class="label" x="805" y="775" text-anchor="middle">CSV export</text><text class="small" x="805" y="800" text-anchor="middle">Structured tabular data</text>
+</svg>

@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Simple Renderer | Samyak Jain</title>
+<meta name="description" content="How a one-week streaming prototype became a reporting service used by eight teams at Goldman Sachs.">
+<meta property="og:title" content="Simple Renderer | Samyak Jain"><meta property="og:description" content="From unreliable large reports to a shared service: the problem, design, and impact of Simple Renderer.">
+<link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="assets/rag-case-study.css"><link rel="stylesheet" href="assets/renderer-case-study.css">
+</head>
+<body>
+<a class="skip-link" href="#main">Skip to content</a>
+<header class="site-header"><nav class="container" aria-label="Main navigation"><a class="name" href="../index.html">Samyak Jain</a><a href="../portfolio.html">Back to portfolio</a></nav></header>
+<main class="container" id="main">
+<div class="intro">
+<p class="eyebrow">Goldman Sachs · Backend engineering</p>
+<h1>Simple Renderer</h1>
+<p class="standfirst">A one-week prototype that grew into a reporting service used by eight teams.</p>
+<p class="intro-story">With reporting deadlines approaching and large reports running out of memory, I built a lightweight streaming renderer to test a simpler way forward. It helped us meet the deadline, avoid additional vendor licensing costs, and replace a heavier rendering path.</p>
+<p class="byline">Java · Spring Boot · Jackson Streaming · Apache POI · AWS</p>
+<div class="intro-links"><a href="#context">The challenge</a><a href="#prototype">The prototype</a><a href="#architecture">System design</a><a href="#validation">Validation</a><a href="#impact">Impact</a></div>
+</div>
+<section class="opening" id="context">
+<div class="section-heading"><span>01</span><h2>A deadline and an unreliable reporting flow</h2></div>
+<p>Our Asset &amp; Wealth Management team had regulatory reporting deadlines coming up. Data arrived from several upstream systems, parts of the workflow were manual, and large report runs were failing with out-of-memory errors. We needed a reliable way to turn that data into the Excel and CSV files the business used.</p>
+<p>The team was weighing broader rendering infrastructure and vendor tooling, including Adobe, which was already used elsewhere for templated reports. Those options made sense in a fragmented reporting environment. But before committing to them, I wanted to establish what was actually causing these reports to fail.</p>
+</section>
+<section id="prototype">
+<div class="section-heading"><span>02</span><h2>A prototype to settle the question</h2></div>
+<p>I focused on the immediate requirement: generate large, structured reports correctly and on time. In about a week, I built a Java prototype that processed JSON incrementally with Jackson instead of materializing the whole payload in memory.</p>
+<p>I then compared its output with the existing flow and stress-tested it with payloads similar to the ones that had been failing. The results pointed to memory handling as the dominant bottleneck. A streaming approach could meet the requirement without the cost and integration work of a broader templating solution.</p>
+<p>That evidence helped the team align around the lighter design. The prototype became the basis for a standalone service on AWS that other teams could use for their own reports.</p>
+</section>
+<section id="architecture">
+<div class="section-heading"><span>03</span><h2>Inside the renderer</h2></div>
+<p>The service accepts a JSON stream containing report metadata followed by rows. Metadata describes the columns, data types, and display formats, so different upstream applications can use the same renderer without a fixed template for each report.</p>
+<figure class="system-diagram">
+<div class="diagram-heading"><span>Simple Renderer architecture</span><span>Input → transformation → output</span></div>
+<div class="diagram-scroll" tabindex="0" role="region" aria-label="Static system architecture diagram; scroll horizontally on small screens"><img src="assets/simple-renderer-architecture.svg" width="1120" height="860" alt="Upstream applications send metadata and JSON values into the Java service on AWS. A streaming reader creates sequenced chunks for parallel workers. An ordered reassembly buffer feeds a single writer, which uses cached column styles and temporary worksheet XML to produce Excel or CSV reports."></div>
+<figcaption>Simplified system view. Solid arrows show report data; dashed arrows show metadata and style configuration.</figcaption>
+</figure>
+<div class="design-grid">
+<article><p class="design-number">01 / Read incrementally</p><h3>Keep the input moving</h3><p>Jackson reads the JSON stream token by token. Rows are grouped into sequenced chunks so the service can start processing before the full dataset has arrived.</p></article>
+<article><p class="design-number">02 / Transform in parallel</p><h3>Use workers for row conversion</h3><p>An ExecutorService pool handles data conversion and format mapping. Sequence identifiers preserve each chunk’s place in the report even when workers finish in a different order.</p></article>
+<article><p class="design-number">03 / Restore order</p><h3>Give the workbook one writer</h3><p>A reassembly buffer brings completed chunks back into sequence. A single writer appends the rows, keeping output deterministic and workbook changes on one thread.</p></article>
+<article><p class="design-number">04 / Stream the output</p><h3>Reuse styles and flush rows</h3><p>Column styles are prepared from metadata and reused. For Excel, Apache POI SXSSF spills older worksheet rows to temporary XML, then packages the final XLSX file. CSV follows a sequential text-output path.</p></article>
+</div>
+</section>
+<section id="decisions">
+<div class="section-heading"><span>04</span><h2>The choices that kept it focused</h2></div>
+<div class="two-columns"><article><h3>A shared metadata contract</h3><p>Keeping report definitions separate from row values let the renderer serve different reporting workflows. The upstream application supplied the business data and column schema; the service handled conversion, formatting, and file generation.</p></article><article><h3>Parallel work, ordered output</h3><p>Transformation could run concurrently, while writing remained sequential. The coordination point was reassembly: later chunks could finish early, but rows still had to reach the output in their original order.</p></article></div>
+<p>Streaming output also introduced a tradeoff: temporary disk I/O and final XLSX packaging still had a cost. Moving to a streaming pipeline addressed the memory pressure, while the writer and disk remained important throughput constraints.</p>
+</section>
+<section id="validation">
+<div class="section-heading"><span>05</span><h2>Proving it could replace the existing flow</h2></div>
+<p>Performance alone would not make the change safe. I regression-tested generated reports against the existing flow to check that the outputs still matched the business requirements. Because the input path also moved to a more scalable JSON schema, I tested that transformation separately.</p>
+<p>Stress tests exercised payload sizes representative of the failing runs. Together, the correctness and scale checks gave the team evidence that the simpler approach could handle real reporting workloads.</p>
+<div class="validation-pair"><div><strong>Correctness</strong><p>Regression checks against existing reports and validation of the changed input transformation.</p></div><div><strong>Scale</strong><p>Large-payload runs to check generation time and reliability under the conditions that had caused failures.</p></div></div>
+</section>
+<section id="impact">
+<div class="section-heading"><span>06</span><h2>From one reporting problem to eight teams</h2></div>
+<dl class="impact-grid"><div><dt>Faster report generation</dt><dd>60%</dd></div><div><dt>Teams using the service</dt><dd>8</dd></div><div><dt>Reports supported annually</dt><dd>~20K</dd></div></dl>
+<p>The renderer handled 5GB+ JSON inputs and processed 100K+ rows in under four minutes on the reporting workloads. It helped us meet the reporting timeline, avoided additional Adobe licensing costs for this use case, and helped phase out the older, heavier rendering path.</p>
+<p>By the time I left Goldman Sachs, eight teams were using it for similar internal reporting workflows. A prototype built to answer one technical question had become a reusable service.</p>
+<p>What stayed with me was the value of testing the constraint early. The prototype made the decision concrete: the team could compare correct outputs and large-payload behavior before taking on a bigger architectural change.</p>
+</section>
+</main><footer class="container"><span>Samyak Jain · Simple Renderer</span><a href="../portfolio.html">Back to portfolio</a></footer>
+</body></html>

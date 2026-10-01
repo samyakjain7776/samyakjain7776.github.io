@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Adaptive Vector Search Engine | Samyak Jain</title>
+    <meta name="description" content="Faster filtered similarity search through adaptive query planning, PostgreSQL partitioning, and vector indexes.">
+    <meta property="og:title" content="Adaptive Vector Search Engine | Samyak Jain">
+    <meta property="og:description" content="Faster filtered similarity search through adaptive query planning, PostgreSQL partitioning, and vector indexes.">
+    <meta property="og:type" content="website">
+    <link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+    <link rel="stylesheet" href="../assets/site.css">
+    <script defer src="../assets/site.js"></script>
+</head>
+<body>
+<a class="skip-link" href="#main">Skip to content</a>
+<header class="site-header">
+    <nav class="container navigation" aria-label="Main navigation">
+        <a class="name" href="../index.html">Samyak Jain<span>.</span></a>
+        <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="navigation-links">Menu</button>
+        <div class="nav-links" id="navigation-links"><a href="../index.html">Home</a><a href="../index.html#research">Research</a><a href="../portfolio.html">Portfolio</a><a class="resume-link" href="../assets/SamyakJain_Resume.pdf">Resume ↗</a></div>
+    </nav>
+</header>
+<main class="container" id="main"><div class="page-intro"><p class="eyebrow">Project · Databases</p><h1>Adaptive Vector Search Engine</h1><p class="standfirst">Faster filtered similarity search through adaptive query planning, PostgreSQL partitioning, and vector indexes.</p></div><article class="article">
+<div class="project-facts"><span>Sep–Nov 2025</span><span>Python · PostgreSQL · pgvector · PostGIS</span></div>
+<section><h2>Search that accounts for the filters.</h2><p>Similarity search becomes a different problem when a query also restricts which records are eligible. Searching a global vector index may suit a broad query, while a narrow geographic or structured filter can make a smaller search space more useful.</p><p>I built an adaptive search engine over 515K hotel reviews to choose a retrieval strategy based on filter selectivity: how much of the dataset remains after applying the query’s filters.</p></section>
+<section><h2>A planner for filtered vector search</h2><p>The system combines PostgreSQL partitioning, pgvector indexes, and PostGIS geospatial filtering. Its planner routes queries between a global HNSW index and parallel searches over partition-local HNSW indexes. HNSW is a graph-based index for approximate nearest-neighbor search.</p>
+<ol class="pipeline" aria-label="Vector search query path"><li><strong>01 / QUERY</strong>Vector + structured filters</li><li><strong>02 / ESTIMATE</strong>Assess filter selectivity</li><li><strong>03 / ROUTE</strong>Global or local indexes</li><li><strong>04 / RETURN</strong>Ranked matches</li></ol>
+<p>For a broad query, the global index searches across the dataset. When filters narrow the eligible records, partition-local indexes offer a way to focus the search. The planner chooses between these paths instead of treating every query alike.</p></section>
+<section><h2>Measured performance</h2><dl class="project-metrics"><div><dt>Lower average latency</dt><dd>22%</dd></div><div><dt>Recall@k</dt><dd>98.5%</dd></div><div><dt>Hotel reviews</dt><dd>515K</dd></div></dl><p>The engine reduced average latency by 22% compared with global approximate nearest-neighbor search while maintaining 98.5% Recall@k on the evaluated workload.</p><p>Recall measures how many of the relevant nearest neighbors the approximate search recovers. Reporting it alongside latency makes the speed improvement meaningful; the query mix and filter selectivity still determine where the approach helps.</p></section>
+<section><h2>The decision behind the optimization</h2><p>A smaller search space can reduce work, but selecting partitions and coordinating searches also has a cost. This project makes that tradeoff part of query planning: use the structure of the query to decide how to search.</p><p>It connects database design and retrieval quality, with the planner responsible for finding a useful balance between response time and the neighbors returned.</p></section>
+<div class="article-links"><a href="../portfolio.html">← All projects</a><a href="mailto:samyak.jain7776@gmail.com">Ask me about this project ↗</a></div></article></main><footer class="site-footer"><div class="container footer-inner">
+    <span>© 2026 Samyak Jain · Atlanta, GA</span>
+    <div class="footer-links"><a href="mailto:samyak.jain7776@gmail.com">Email</a><a href="https://github.com/samyakjain7776">GitHub</a><a href="https://www.linkedin.com/in/samyakjain7776/">LinkedIn</a><a href="../assets/SamyakJain_Resume.pdf">Resume</a></div>
+</div></footer>
+</body>
+</html>

@@ -1,0 +1,15 @@
+'use strict';
+const $=s=>document.querySelector(s);
+const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const text=s=>esc(String(s??'').replace(/\\n/g,'\n'));
+let rows=[];
+function outcome(row){const a=row.arag.grade==='CORRECT',f=row.flat.grade==='CORRECT';return a?(f?'both':'arag'):(f?'flat':'neither');}
+function datasetChanged(){filterRows();}
+function filterRows(){rows=window.EXPERIMENTS[$('#dataset').value].rows.filter(r=>$('#outcome').value==='all'||outcome(r)===$('#outcome').value);$('#record').replaceChildren(...rows.map((r,i)=>new Option(`${i+1}. ${r.question}`,r.id)));if(!rows.length){$('#record').append(new Option('No questions match this outcome',''));$('#comparison').textContent='No questions match this outcome. Choose another filter.';return;}renderRecord();}
+function resultHTML(r,label){return `<article class="result"><header><h3>${label}</h3><span class="grade ${r.grade==='CORRECT'?'correct':''}">${esc(r.grade)}</span></header><p class="metrics">${r.seconds.toFixed(2)}s recorded · ${r.docs.length} retrieved chunks${r.loops?` · ${r.loops} agent loops`:''}</p><p class="answer">${text(r.answer)}</p><details><summary>Retrieved passages (${r.docs.length})</summary>${r.docs.map((d,i)=>`<div class="evidence"><b>Passage ${i+1}</b><p>${text(d.preview)}</p></div>`).join('')}</details><details><summary>Why it received this grade</summary><p>${text(r.rationale)}</p></details>${r.tools?`<details><summary>Agent tool calls (${r.tools.length})</summary>${r.tools.length?r.tools.map(t=>`<div class="tool"><b>Loop ${esc(t.loop)} · ${esc(t.name)}</b><pre>${esc(JSON.stringify(t.args,null,2))}</pre></div>`).join(''):'<p>No tool calls were saved for this question.</p>'}<p>Stop: ${esc(r.stop||'not recorded')}. ${r.fallback?'The final context included at least one search result that the agent had not opened with read_chunk.':''}</p></details>`:''}</article>`;}
+function renderRecord(){document.querySelectorAll('[data-question]').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.question===$('#record').value))); const r=rows.find(r=>r.id===$('#record').value);if(!r)return;$('#comparison').innerHTML=`<p class="question-id">${esc(r.id)}</p><h3 class="comparison-question">${text(r.question)}</h3><div class="expected"><b>Reference answer</b><br>${text(r.expected)}</div><div class="comparisons">${resultHTML(r.flat,'Flat baseline')}${resultHTML(r.arag,'A-RAG')}</div>`;}
+$('#dataset').addEventListener('change',datasetChanged);$('#outcome').addEventListener('change',filterRows);$('#record').addEventListener('change',renderRecord);
+
+function pickExample(dataset,id){$('#dataset').value=dataset;$('#outcome').value='all';datasetChanged();$('#record').value=id;renderRecord();}
+document.querySelectorAll('[data-question]').forEach(b=>b.addEventListener('click',()=>pickExample(b.dataset.dataset,b.dataset.question)));
+if(window.EXPERIMENTS){pickExample('pg','pg-d-006');}else{$('#comparison').textContent='The saved answers did not load. Try reloading the page, or use the repository links below.';}
