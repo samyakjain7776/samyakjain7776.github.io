@@ -3,10 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Adaptive Vector Search Engine | Samyak Jain</title>
-    <meta name="description" content="Faster filtered similarity search through adaptive query planning, PostgreSQL partitioning, and vector indexes.">
-    <meta property="og:title" content="Adaptive Vector Search Engine | Samyak Jain">
-    <meta property="og:description" content="Faster filtered similarity search through adaptive query planning, PostgreSQL partitioning, and vector indexes.">
+    <title>Hybrid Vector Search | Samyak Jain</title>
+    <meta name="description" content="Finding similar hotel reviews while respecting location, dates, and ratings—with a choice of global or partition-local search.">
+    <meta property="og:title" content="Hybrid Vector Search | Samyak Jain">
+    <meta property="og:description" content="Finding similar hotel reviews while respecting location, dates, and ratings—with a choice of global or partition-local search.">
     <meta property="og:type" content="website">
     <link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
     <link rel="stylesheet" href="../assets/site.css">
@@ -22,14 +22,25 @@
         <div class="nav-links" id="navigation-links"><a href="../index.html">Home</a><a href="../index.html#research">Research</a><a href="../portfolio.html">Portfolio</a><a class="resume-link" href="../assets/SamyakJain_Resume.pdf">Resume ↗</a></div>
     </nav>
 </header>
-<main class="container" id="main"><div class="page-intro"><p class="eyebrow">Project · Databases</p><h1>Adaptive Vector Search Engine</h1><p class="standfirst">Faster filtered similarity search through adaptive query planning, PostgreSQL partitioning, and vector indexes.</p></div><article class="article">
+<main class="container" id="main"><div class="page-intro"><p class="eyebrow">Project · Databases</p><h1>Hybrid Vector Search</h1><p class="standfirst">Finding similar hotel reviews while respecting location, dates, and ratings—with a choice of global or partition-local search.</p></div><article class="article">
 <div class="project-facts"><span>Sep–Nov 2025</span><span>Python · PostgreSQL · pgvector · PostGIS</span></div>
-<section><h2>Search that accounts for the filters.</h2><p>Similarity search becomes a different problem when a query also restricts which records are eligible. Searching a global vector index may suit a broad query, while a narrow geographic or structured filter can make a smaller search space more useful.</p><p>I built an adaptive search engine over 515K hotel reviews to choose a retrieval strategy based on filter selectivity: how much of the dataset remains after applying the query’s filters.</p></section>
-<section><h2>A planner for filtered vector search</h2><p>The system combines PostgreSQL partitioning, pgvector indexes, and PostGIS geospatial filtering. Its planner routes queries between a global HNSW index and parallel searches over partition-local HNSW indexes. HNSW is a graph-based index for approximate nearest-neighbor search.</p>
-<ol class="pipeline" aria-label="Vector search query path"><li><strong>01 / QUERY</strong>Vector + structured filters</li><li><strong>02 / ESTIMATE</strong>Assess filter selectivity</li><li><strong>03 / ROUTE</strong>Global or local indexes</li><li><strong>04 / RETURN</strong>Ranked matches</li></ol>
-<p>For a broad query, the global index searches across the dataset. When filters narrow the eligible records, partition-local indexes offer a way to focus the search. The planner chooses between these paths instead of treating every query alike.</p></section>
-<section><h2>Measured performance</h2><dl class="project-metrics"><div><dt>Lower average latency</dt><dd>22%</dd></div><div><dt>Recall@k</dt><dd>98.5%</dd></div><div><dt>Hotel reviews</dt><dd>515K</dd></div></dl><p>The engine reduced average latency by 22% compared with global approximate nearest-neighbor search while maintaining 98.5% Recall@k on the evaluated workload.</p><p>Recall measures how many of the relevant nearest neighbors the approximate search recovers. Reporting it alongside latency makes the speed improvement meaningful; the query mix and filter selectivity still determine where the approach helps.</p></section>
-<section><h2>The decision behind the optimization</h2><p>A smaller search space can reduce work, but selecting partitions and coordinating searches also has a cost. This project makes that tradeoff part of query planning: use the structure of the query to decide how to search.</p><p>It connects database design and retrieval quality, with the planner responsible for finding a useful balance between response time and the neighbors returned.</p></section>
+<section><h2>The closest match still has to meet the filters.</h2>
+<p>“A quiet hotel near the station” is a similarity search. Add a city, a minimum rating, and a review year, and the search has two jobs: find relevant text and respect the constraints. A global vector index can spend work on neighbors that those filters reject.</p>
+<p>This team project explores that problem across 515K European hotel reviews. It combines semantic similarity with structured and geographic filters, and compares a global search against searches over smaller country-and-year partitions.</p></section>
+<section id="architecture"><h2>Choose the search space before searching.</h2>
+<p>PostgreSQL stores an unpartitioned copy for global search and a partitioned copy with 18 leaves: six countries, each divided into three years. Both use pgvector HNSW indexes; PostGIS handles distance filters.</p>
+<figure style="margin:28px 0"><img src="assets/vector-search-architecture.svg" alt="Query text is embedded and filters are passed to a selectivity estimator. A heuristic router selects global search, one local partition, or parallel local partitions. Results are merged into the top k matches." style="width:100%;height:auto" width="840" height="540"><figcaption>Query estimates determine the retrieval path. Every path applies the same filters.</figcaption></figure>
+<p>The router asks PostgreSQL to estimate matching rows with <code>EXPLAIN</code>, without executing the search. Country and year filters identify eligible partitions; estimated selectivity and partition count determine the route.</p>
+<ul><li><strong>One partition:</strong> query its local index directly.</li><li><strong>Two to ten partitions, with 1–30% estimated selectivity:</strong> query them concurrently using a Python thread pool, then merge candidates by cosine similarity.</li><li><strong>Otherwise:</strong> use the global table, including when table statistics are unavailable for a multi-partition query.</li></ul>
+<p>These configurable thresholds express a heuristic: narrowing the search space should save enough work to justify coordinating several queries. PostgreSQL still chooses the execution plan within each search.</p></section>
+<section><h2>Course evaluation</h2>
+<dl class="project-metrics"><div><dt>Reported latency reduction</dt><dd>22%</dd></div><div><dt>Reported Recall@10</dt><dd>98.5%</dd></div><div><dt>Hotel reviews</dt><dd>515K</dd></div></dl>
+<p>The course report records average latency of 2,018 ms for hybrid search and 2,603 ms for the global ANN baseline—about 22% lower—with 98.5% recall. These figures describe the report’s experimental workload, rather than a performance guarantee for this implementation.</p>
+<p>The experiment compares exact filtered search, global ANN search, and partition-based hybrid search. Medium-selectivity queries offer the clearest opportunity: enough records remain to make exact search expensive, but filters can still remove much of the global search space.</p></section>
+<section><h2>Where the tradeoff gets interesting</h2>
+<p>More partitions mean more queries, connections, and candidates to merge. A narrow filter can help local search, but partitioning alone does not make every query faster. The router returns its row estimate, chosen strategy, and reason so those decisions can be inspected.</p>
+<p>Parallel searches fetch extra candidates before merging the top matches. That can improve approximate retrieval, but does not guarantee exact recall. Stale statistics and correlated filters can also lead to poor routing estimates.</p>
+<p>Shared filter construction keeps query semantics consistent across strategies. Each read transaction ends after the query, and a failed partition fails the search rather than quietly returning an incomplete result.</p></section>
 <div class="article-links"><a href="../portfolio.html">← All projects</a><a href="mailto:samyak.jain7776@gmail.com">Ask me about this project ↗</a></div></article></main><footer class="site-footer"><div class="container footer-inner">
     <span>© 2026 Samyak Jain · Atlanta, GA</span>
     <div class="footer-links"><a href="mailto:samyak.jain7776@gmail.com">Email</a><a href="https://github.com/samyakjain7776">GitHub</a><a href="https://www.linkedin.com/in/samyakjain7776/">LinkedIn</a><a href="../assets/SamyakJain_Resume.pdf">Resume</a></div>
