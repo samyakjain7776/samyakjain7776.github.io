@@ -117,3 +117,16 @@ li + li { margin-top:9px; }
 @media (max-width:480px) { .hero h1 { font-size:3.3rem; } .hero .role { font-size:1.4rem; } .section-heading { align-items:start; flex-direction:column; gap:17px; } .skills-grid { grid-template-columns:1fr; gap:25px; } .project-card { padding:23px; } .collection .older-grid { grid-template-columns:1fr; } .page-intro { padding-top:45px; } }
 @media (prefers-reduced-motion:reduce) { html { scroll-behavior:auto; } *,*::before,*::after { transition:none!important; animation:none!important; } .project-card:hover { transform:none; } }
 @media print { .site-header,.skip-link,.menu-toggle { display:none; } .container { width:100%; } .hero,.section { padding:25px 0; } .project-card { break-inside:avoid; } body { background:white; font-size:11pt; } }
+
+/* Keep routing comparisons readable at desktop and narrow widths. */
+.table-scroll { max-width:100%; overflow-x:auto; margin:24px 0; border:1px solid var(--line); border-radius:10px; }
+.routing-table { width:100%; min-width:620px; table-layout:fixed; border-collapse:collapse; text-align:left; font-size:.94rem; line-height:1.6; }
+.routing-table caption { text-align:left; padding:16px 20px; font-weight:650; color:var(--ink); }
+.routing-table th, .routing-table td { padding:16px 20px; vertical-align:top; border-top:1px solid var(--line); }
+.routing-table th { background:var(--wash); color:var(--ink); }
+.routing-table th:nth-child(1) { width:38%; }
+.routing-table th:nth-child(2) { width:25%; }
+.routing-table th:nth-child(3) { width:37%; }
+.routing-table td { color:var(--muted); }
+.routing-table td:nth-child(2) { font-weight:600; color:var(--ink); }
+.routing-table tbody tr:nth-child(even) { background:var(--wash); }
